@@ -1,0 +1,24 @@
+main {
+    padding-bottom: 50px;
+}
+main h1 {
+    color: #00b1d2ff;
+}
+
+.input-container {
+    display: inline-flex;
+    flex-direction: column;
+    padding-top: 10px;
+}
+
+form {
+    display: block;
+}
+
+label {
+    color: #00b1d2ff;
+}
+
+/*#form-input:invalid {
+    border: 2px solid red
+}*/

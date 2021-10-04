@@ -19,6 +19,20 @@ label {
     color: #00b1d2ff;
 }
 
+.timezone-container {
+    background-color: #ccc;
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 5px;
+    max-width: 600px;
+}
+
+.timezone-selected {
+    margin: 0 20px;
+    font-weight: 500;
+    font-family: "monospace";
+}
+
 /*#form-input:invalid {
     border: 2px solid red
 }*/

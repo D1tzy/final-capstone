@@ -41,11 +41,18 @@ function updateReservation(data) {
         .then(updatedData => updatedData[0])
 }
 
+function destroy(id) {
+    return knex('reservations')
+        .where({'reservation_id': id})
+        .del()
+}
+
 module.exports = {
     listByDate,
     listByNumber,
     read,
     insert,
     update,
-    updateReservation
+    updateReservation,
+    destroy
 }

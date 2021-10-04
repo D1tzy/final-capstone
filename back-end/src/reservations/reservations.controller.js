@@ -31,6 +31,10 @@ async function updateReservation(req, res, next) {
   res.json({data: await service.updateReservation(res.locals)})
 }
 
+async function destroy(req, res, next) {
+  res.json({data: await service.destroy(res.locals.reservation_id)})
+}
+
 async function validQuery(req, res, next) {
   const {date, mobile_number} = req.query
 
@@ -143,20 +147,14 @@ function notTuesday(req, res, next) {
 
 function isValidDate(req, res, next) {
   const {reservation_date} = res.locals
-
-  // get todays date
-  const today = Date.now()
-
-  // turn reservation_date into an actual date using the Date() constructor
-  const date = new Date(reservation_date)
-  
-  if (date < today) return next({status: 400, message: "Reservation date is set in the future"})
-
+  if (Date.parse(reservation_date) < Date.now()) return next({status: 400, message: "Reservation date can not be the same day or in the past"})
   return next()
 }
 
 async function isValidTime(req, res, next) {
-  const {reservation_time} = res.locals
+  const {reservation_time, reservation_date} = res.locals
+
+  // this line checks to make sure the restaurant is open for the reservation time
   // no need to use the date constructor for reservation_time, string comparisons works just fine 
   if (reservation_time < "10:30" || reservation_time > "21:30") return next({status: 400, message: "Reservation time must be after 10:30 AM and before 9:30 PM"})
   return next()
@@ -181,5 +179,6 @@ module.exports = {
   read: [reservationExists, read],
   create: [hasData, hasValidProperties, isValidDate, isValidTime, notTuesday, create],
   update: [reservationExists, hasData, validStatus, update],
-  updateReservation: [reservationExists, hasData, validStatus, hasValidProperties, updateReservation]
+  updateReservation: [reservationExists, hasData, validStatus, hasValidProperties, updateReservation],
+  delete: [reservationExists, destroy]
 };

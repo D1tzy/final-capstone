@@ -6,3 +6,10 @@
 .routes {
   background-color: #93d9c9;
 }
+
+.footer {
+  height: 50px;
+  width: 100%;
+  background-color: #93d9c9;
+  padding-block-end: 25px;
+}

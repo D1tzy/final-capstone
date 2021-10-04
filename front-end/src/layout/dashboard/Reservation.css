@@ -1,0 +1,25 @@
+.content-header {
+    color: white;
+    font-size: 38px;
+}
+
+div .content {
+    height: 50px;
+    width: 100%;
+    text-align: center;
+    border: solid 3px;
+    border-color: #00b1d2ff;
+    padding: 8px 14px;
+    font-size: 12px;
+}
+
+.content-container {
+    width: 31%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+col {
+    justify-content: space-around;
+}

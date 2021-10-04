@@ -72,10 +72,26 @@ export async function listReservations(params, signal) {
 
 export async function createReservation(data, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`)
-  const method = 'POST'
-  const newData = {data: data}
-  const body = JSON.stringify(newData)
-  console.log(body)
- 
-  return await fetchJson(url, {method, body, headers, signal}, [])
+  return await fetchJson(url, { method: 'POST', body: JSON.stringify({data: data}), headers, signal }, [])
 }
+
+export async function setReservation(data, reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`)
+  return await fetchJson(url, { method: 'PUT', body: JSON.stringify({data: data}), headers, signal }, [])
+}
+
+export async function deleteReservation(data, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${data.reservation_id}`)
+  return await fetchJson(url, { method: 'DELETE', body: JSON.stringify({data: data}), headers, signal }, [])
+}
+
+export async function createTable(data, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`)
+  return await fetchJson(url, { method: 'POST', body: JSON.stringify({data: data}), headers, signal }, [])
+}
+
+export async function listTables(signal) {
+  const url = new URL(`${API_BASE_URL}/tables`)
+  return await fetchJson(url, { headers, signal }, [])
+}
+

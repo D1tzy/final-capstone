@@ -38,7 +38,13 @@ function setStatus(id, status) {
 function destroy(id) {
     return knex("tables")
         .where({"reservation_id": id})
-        .update({"reservation_id": null})
+        .update({"reservation_id": knex.raw("NULL")})
+}
+
+function deleteTable(id) {
+    return knex("tables")
+        .where({"table_id": id})
+        .del()
 }
 
 module.exports = {
@@ -47,5 +53,6 @@ module.exports = {
     insert,
     update,
     setStatus,
-    destroy
+    destroy,
+    deleteTable
 }

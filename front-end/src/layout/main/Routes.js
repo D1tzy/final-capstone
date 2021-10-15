@@ -2,12 +2,14 @@ import React from "react";
 
 import { Redirect, Route, Switch, useParams } from "react-router-dom";
 import Dashboard from "../dashboard/Dashboard";
-import NotFound from "../NotFound";
+import NotFound from "./NotFound";
 import { today } from "../../utils/date-time";
 import useQuery from "../../utils/useQuery";
 import CreateReservation from "../CreateReservation/CreateReservation";
 import CreateTable from "../CreateTable/CreateTable";
-import SeatReservation from "../../SeatReservation/SeatReservation";
+import SeatReservation from "../SeatReservation/SeatReservation";
+import Search from "../Search/Search";
+import EditReservation from "../EditReservation/EditReservation";
 
 /**
  * Defines all the routes for the application.
@@ -20,7 +22,6 @@ import SeatReservation from "../../SeatReservation/SeatReservation";
 
 function Routes() {
   const date = useQuery().get("date")
-  const { reservationId } = useParams()
 
   return (
     <Switch>
@@ -28,7 +29,10 @@ function Routes() {
         <Redirect to={"/dashboard"} />
       </Route>
       <Route path='/reservations/:reservation_id/seat'>
-        <SeatReservation reservation={reservationId} />
+        <SeatReservation />
+      </Route>
+      <Route path='/reservations/:reservation_id/edit'>
+        <EditReservation />
       </Route>
       <Route path="/reservations/new">
         <CreateReservation />
@@ -38,6 +42,9 @@ function Routes() {
       </Route>
       <Route path='/tables/new'>
         <CreateTable />
+      </Route>
+      <Route>
+        <Search />
       </Route>
       <Route>
         <NotFound />

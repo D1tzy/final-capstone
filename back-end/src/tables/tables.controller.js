@@ -1,11 +1,12 @@
 const service = require("./tables.service")
 const reservationsService = require("../reservations/reservations.service")
+const asyncErrorBoundary = require('../utils/asyncErrorBoundary')
 
 async function list(req, res, next) {
     res.json({data: await service.list()})
 }
 
-async function read(req, res, next) {
+function read(req, res, next) {
     res.json({data: res.locals.readData})
 }
 
@@ -27,8 +28,13 @@ async function update(req, res, next) {
 }
 
 async function destroy(req, res, next) {
-    await service.setStatus(res.locals.tableId, "finished")
-    res.json({data: await service.destroy(res.locals.tableId)})
+    await service.setStatus(res.locals.readData.reservation_id, "finished")
+    const data = await {...res.locals.readData, reservation_id: null}
+    res.json({data: await service.update(data)})
+}
+
+async function deleteTable(req, res, next) {
+    res.json({data:await service.deleteTable(res.locals.tableId)})
 }
 
 async function tableExists(req, res, next) {
@@ -40,7 +46,7 @@ async function tableExists(req, res, next) {
 
     res.locals.readData = data
     res.locals.tableId = tableId
-
+    console.log(data, tableId)
     return next()
 }
 
@@ -96,17 +102,19 @@ function isNotSeated(req, res, next) {
     return next()
 }
 
-function isNotOccupied(req, res, next) {
-    if (res.locals.readData.reservation_id === null) return next({status: 400, message: "Table is not occupied"})
+function properlyOccupied(req, res, next) {
+    if (req.originalUrl === `/tables/${res.locals.tableId}/seat` && res.locals.readData.reservation_id === null) return next({status: 400, message: "Table is not occupied"})
+    if (req.originalUrl === `tables/${res.locals.tableId}` && res.locals.readData.reservation_id !== null) return next({status: 400, message: "Table is occupied"})
 
     return next()
 }
 
 
 module.exports = {
-    list,
-    read: [tableExists, read],
-    create: [hasData, hasValidProperties, create],
-    update: [hasData, putRequestValidProperties, reservationExists, tableExists, hasCapacity, isNotSeated, update],
-    delete: [tableExists, isNotOccupied, destroy]
+    list: [asyncErrorBoundary(list)],
+    read: [asyncErrorBoundary(tableExists), read],
+    create: [hasData, hasValidProperties, asyncErrorBoundary(create)],
+    update: [hasData, putRequestValidProperties, asyncErrorBoundary(reservationExists), asyncErrorBoundary(tableExists), hasCapacity, isNotSeated, asyncErrorBoundary(update)],
+    delete: [asyncErrorBoundary(tableExists), properlyOccupied, asyncErrorBoundary(destroy)],
+    deleteTable: [asyncErrorBoundary(tableExists), properlyOccupied, asyncErrorBoundary(deleteTable)]
 }

@@ -2,6 +2,9 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
+import "./Menu.css";
+
+
 /**
  * Defines the menu for this application.
  *
@@ -17,7 +20,7 @@ function Menu() {
           to="/"
         >
           <div className="sidebar-brand-text mx-3">
-            <span>Periodic Tables</span>
+            <span className=''>Periodic Tables</span>
           </div>
         </Link>
         <hr className="sidebar-divider my-0" />

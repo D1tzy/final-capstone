@@ -9,7 +9,12 @@ function listByDate(date) {
 
 function listByNumber(number) {
     return knex("reservations")
+        /*.whereRaw(
+            "translate(mobile_number, '() -', '') like ?",
+            `%${mobile_number.replace(/\D/g, "")}%`
+        )*/
         .where("mobile_number", "like", `%${number}%`)
+        .orderBy("reservation_date")
 }
 
 function read(id) {

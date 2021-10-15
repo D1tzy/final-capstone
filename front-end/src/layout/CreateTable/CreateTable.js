@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import Header from '../../Header-Footer/Header'
+import Header from '../Header-Footer/Header'
 import { useHistory } from 'react-router'
 import { createTable } from '../../utils/api'
+import ErrorAlert from '../main/ErrorAlert'
 
 export default function CreateTable() {
     const history = useHistory()
@@ -42,13 +43,14 @@ export default function CreateTable() {
         <>  
             <Header page='Create Table' />
             <h1 className='text-center py-4'>New Table Information</h1>
+            <ErrorAlert error={tableErrors} />
             <form onSubmit={submitHandler}className='d-flex flex-direction-row justify-content-around text-center'>
                 <div className=''>
-                    <label className='mx-3'>Table Name</label>
+                    <label className='mx-3 text-white'>Table Name</label>
                     <input required type='text' name='table_name' onChange={changeHandler}/>
                 </div>
                 <div className=''>
-                    <label className='mx-3'>Capacity</label>
+                    <label className='mx-3 text-white'>Capacity</label>
                     <input required type='number' name='capacity' onChange={changeHandler}/>
                 </div>
                 <button type='cancel' onClick={history.goBack}>Cancel</button>

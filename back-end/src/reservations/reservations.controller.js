@@ -1,13 +1,11 @@
 // reservations controller file
 
 
-// the service variable points to our reservations service file
 const service = require("./reservations.service")
-// validTime is a custom function that can be found in the /back-end/utils folder
 const validTime = require("../utils/validTime");
 
-// list function for the API
-// the service function takes in a date to return specific days of reservations
+const asyncErrorBoundary = require('../utils/asyncErrorBoundary')
+
 function list(req, res, next) {
   res.json({data: res.locals.data});
 }
@@ -16,9 +14,6 @@ function read(req, res, next) {
   res.json({data: res.locals.data})
 }
 
-
-// create function for the API
-// res.locals stores all the data for the new reservation
 async function create(req, res) {
   res.status(201).json({data: await service.insert(res.locals)})
 }
@@ -147,11 +142,11 @@ function notTuesday(req, res, next) {
 
 function isValidDate(req, res, next) {
   const {reservation_date} = res.locals
-  if (Date.parse(reservation_date) < Date.now()) return next({status: 400, message: "Reservation date can not be the same day or in the past"})
+  if (Date.parse(reservation_date) < Date.now()) return next({status: 400, message: "Reservation must be for a future date"})
   return next()
 }
 
-async function isValidTime(req, res, next) {
+function isValidTime(req, res, next) {
   const {reservation_time, reservation_date} = res.locals
 
   // this line checks to make sure the restaurant is open for the reservation time
@@ -175,10 +170,10 @@ function validStatus(req, res, next) {
 }
 
 module.exports = {
-  list: [validQuery, list],
-  read: [reservationExists, read],
-  create: [hasData, hasValidProperties, isValidDate, isValidTime, notTuesday, create],
-  update: [reservationExists, hasData, validStatus, update],
-  updateReservation: [reservationExists, hasData, validStatus, hasValidProperties, updateReservation],
-  delete: [reservationExists, destroy]
+  list: [asyncErrorBoundary(validQuery), list],
+  read: [asyncErrorBoundary(reservationExists), read],
+  create: [hasData, hasValidProperties, isValidDate, isValidTime, notTuesday, asyncErrorBoundary(create)],
+  update: [asyncErrorBoundary(reservationExists), hasData, validStatus, asyncErrorBoundary(update)],
+  updateReservation: [asyncErrorBoundary(reservationExists), hasData, validStatus, hasValidProperties, asyncErrorBoundary(updateReservation)],
+  delete: [asyncErrorBoundary(reservationExists), asyncErrorBoundary(destroy)]
 };

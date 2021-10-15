@@ -23,3 +23,11 @@ div .content {
 col {
     justify-content: space-around;
 }
+
+.buttons button {
+    width: 20%;
+}
+
+.buttons a {
+    width: 20%
+}

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { listReservations, listTables } from "../../utils/api";
-import ErrorAlert from "../ErrorAlert";
-import Header from "../../Header-Footer/Header";
+import ErrorAlert from "../main/ErrorAlert";
+import Header from "../Header-Footer/Header";
 import Reservation from "./Reservation";
 import Table from "./Table"
 import { previous, today, next } from '../../utils/date-time'
@@ -33,7 +33,7 @@ function Dashboard({ date }) {
       .then(setTables)
     return () => abortController.abort();
   }
-  console.log(tables)
+
   return (
     <>
       <Header page="Dashboard" />
@@ -46,11 +46,11 @@ function Dashboard({ date }) {
             <button className='' onClick={event => history.push(`/dashboard?date=${next(date)}`)}>Forward</button>
           </div>
           <ErrorAlert error={reservationsError} />
-          {(reservations.map((reservation) => <Reservation reservation={reservation} />))}
+          {(reservations.map((reservation) => <Reservation reservation={reservation} loadDashboard={loadDashboard} />))}
         </div>
         <div className='col-6 mt-4 mb-5'>
           <h3 className="mb-3 text-center text-white">Tables:</h3>
-          {(tables.map((table) => <Table table={table} />))}
+          {(tables.map((table) => <Table table={table} loadDashboard={loadDashboard} />))}
         </div>
       </main>
     </>

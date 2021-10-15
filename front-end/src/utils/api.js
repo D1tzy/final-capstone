@@ -75,8 +75,23 @@ export async function createReservation(data, signal) {
   return await fetchJson(url, { method: 'POST', body: JSON.stringify({data: data}), headers, signal }, [])
 }
 
-export async function setReservation(data, reservation_id, signal) {
+export async function setReservationStatus(data, reservation_id, signal) {
   const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/status`)
+  return await fetchJson(url, { method: 'PUT', body: JSON.stringify({data: data}), headers, signal }, [])
+}
+
+export async function readReservation(reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`)
+  return await fetchJson(url, { headers, signal }, [])
+}
+
+export async function searchByNumber(number, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations?mobile_number=${number}`)
+  return await fetchJson(url, { headers, signal }, [])
+}
+
+export async function editReservation(data, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${data.reservation_id}`)
   return await fetchJson(url, { method: 'PUT', body: JSON.stringify({data: data}), headers, signal }, [])
 }
 
@@ -93,5 +108,20 @@ export async function createTable(data, signal) {
 export async function listTables(signal) {
   const url = new URL(`${API_BASE_URL}/tables`)
   return await fetchJson(url, { headers, signal }, [])
+}
+
+export async function seatReservation(reservationId, tableId, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`)
+  return await fetchJson(url, { method: 'PUT', body: JSON.stringify({data: {reservation_id: reservationId}}), headers, signal }, [])
+}
+
+export async function completeReservation(tableId, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}/seat`)
+  return await fetchJson(url, { method: 'DELETE', headers, signal }, [])
+}
+
+export async function deleteTable(tableId, signal) {
+  const url = new URL(`${API_BASE_URL}/tables/${tableId}`)
+  return await fetchJson(url, { method: 'DELETE', headers, signal }, [])
 }
 
